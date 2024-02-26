@@ -9,6 +9,12 @@ Composed of 2 parts:
 
 ### Howto
 
+#### Keys
+
+Set up your keys with:
+
+- `nix key generate-secret --key-name username-hash-collection > secret.key`
+
 #### Server
 
 - Run the server with `uvicorn web:app --reload`
@@ -21,15 +27,9 @@ Composed of 2 parts:
     enable = true;
     collection-url = "server url";
     tokenFile = "/token/path";
+    secretKeyFile = "/secret/key/path";
   };
 ```
-
-##### Signing
-
-Set up your keys with:
-
-* `nix key generate-secret --key-name hash-collection > secret.key`
-* `nix key convert-secret-to-public < ./secret-key > ./public-key`
 
 ### TODO:
 - [ ] method to ingest hydra's results

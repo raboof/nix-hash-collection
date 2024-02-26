@@ -1,4 +1,4 @@
-use libnixstore::{hash_path, query_references, sign_string, Radix::Base32};
+use libnixstore::{query_path_info, query_references, sign_string, Radix::Base32};
 use regex::Regex;
 use reqwest::Result;
 use serde::{Deserialize, Serialize};
@@ -23,9 +23,10 @@ fn parse_drv_hash<'a>(drv_path: &'a str) -> &'a str {
     re.captures(drv_path).unwrap().get(1).unwrap().as_str()
 }
 
-fn fingerprint(out_path: &str) -> String {
-    let _references = query_references(out_path);
-    return "1;<out_path>;<narHash>;<narSize>;<references>".to_string();
+fn fingerprint(out_path: &str, nar_hash: &str, size: u64) -> String {
+    let references = query_references(out_path).expect("Query references").join(",");
+    let fingerprint = format!("1;{out_path};{nar_hash};{size};{references}").to_string();
+    return fingerprint;
 }
 
 #[tokio::main]
@@ -47,8 +48,10 @@ async fn main() -> Result<()> {
     let output_reports: Vec<_> = out_paths
         .split(" ")
         .map(|path| -> OutputReport {
-          let hash = hash_path("sha256", Base32, path).unwrap();
-          let fingerprint = fingerprint(path);
+          let info = query_path_info(path, Base32).unwrap();
+          let hash = info.narhash;
+          let size = info.size;
+          let fingerprint = fingerprint(path, &hash, size);
           let signature = sign_string(secret_key.as_str(), &fingerprint).expect("Failed to sign fingerprint");
           return OutputReport {
               output_path: path,

@@ -5,6 +5,7 @@ from typing import Dict, List
 class OuputHashPair(BaseModel):
     output_path: str
     output_hash: str
+    output_sig: str
 
 class Derivation(BaseModel): 
     id: int
