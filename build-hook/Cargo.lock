@@ -434,7 +434,7 @@ checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
 [[package]]
 name = "libnixstore"
 version = "0.4.0"
-source = "git+https://github.com/nix-community/harmonia.git#7ef3f1eb178672b8adf6eecd1b3b030a5fba1a46"
+source = "git+https://github.com/JulienMalka/harmonia.git#acdc880ba95fffaaca4614837ccc163ef49d000f"
 dependencies = [
  "cxx",
  "cxx-build",

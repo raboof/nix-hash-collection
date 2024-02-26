@@ -11,7 +11,7 @@ rustPlatform.buildRustPackage rec {
   cargoLock = {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "libnixstore-0.4.0" = "sha256-mF2okhT3+ZKNcAHwyRe15eZNxN0rRI6ZyuNpn/fbFK0=";
+      "libnixstore-0.4.0" = "sha256-bP75IcVWkXlFoKT4NyRTnpW+nzad++QY1Nq7eRUbFI4=";
     };
 
   };
