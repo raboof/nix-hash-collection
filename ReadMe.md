@@ -24,6 +24,12 @@ Composed of 2 parts:
   };
 ```
 
+##### Signing
+
+Set up your keys with:
+
+* `nix key generate-secret --key-name hash-collection > secret.key`
+* `nix key convert-secret-to-public < ./secret-key > ./public-key`
 
 ### TODO:
 - [ ] method to ingest hydra's results
