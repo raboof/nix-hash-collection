@@ -67,10 +67,10 @@ class Report(Base):
     __tablename__ = "reports"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    output_digest: Mapped[str] = mapped_column(index=True)
     output_path: Mapped[str] = mapped_column()
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     drv_id: Mapped[str] = mapped_column(ForeignKey("derivations.id"))
     derivation: Mapped["Derivation"] = relationship(back_populates="reports")
     output_hash: Mapped[str] = mapped_column()
     output_sig: Mapped[str] = mapped_column()
-

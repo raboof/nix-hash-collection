@@ -17,6 +17,7 @@ def create_report(db: Session, drv_hash: str, output_hash_map: list[schemas.Oupu
                 insert(models.Report)
                 .values(
                     {
+                        "output_digest": item.output_path[len("/nix/store/"):43],
                         "output_path": item.output_path,
                         "user_id": user_id,
                         "drv_id": derivation.id,

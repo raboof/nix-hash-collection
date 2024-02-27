@@ -1,5 +1,5 @@
 import typing as t
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.security.http import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -91,3 +91,26 @@ def record_report(
     }
 
 
+# We act as a cache just for signatures, one per user and drv hash:
+@app.get("/signatures/{user}/nix-cache-info")
+def nix_cache_info(user: str):
+    return Response(content="""StoreDir: /nix/store
+WantMassQuery: 1
+Priority: 60""", media_type="text/x-nix-cache-info")
+
+@app.get("/signatures/{user}/{output_digest}.narinfo")
+def nix_cache_info(user: str,
+                   output_digest: str,
+                   db: Session = Depends(get_db),
+):
+    # TODO filter on user
+    attestations = db.query(models.Report).filter_by(output_digest=output_digest).all()
+    if len(attestations) == 0:
+        raise HTTPException(status_code=404, detail="Not found")
+    attestation = attestations[0]
+    return Response(content=f"""StorePath: {attestation.output_path}
+URL: no
+NarHash: {attestation.output_hash}
+NarSize: 1
+Sig: {attestation.output_sig}
+""", media_type="text/x-nix-narinfo")
